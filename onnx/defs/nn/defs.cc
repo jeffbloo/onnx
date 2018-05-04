@@ -223,14 +223,13 @@ std::function<void(OpSchema&)> PoolOpSchemaGenerator(
   };
 } // namespace ONNX_NAMESPACE
 
-ONNX_OPERATOR_SCHEMA(AveragePool)
+ONNX_OPERATOR_SCHEMA(AveragePool, ONNX_DOMAIN, 1, OpSchema()
     .FillUsing(PoolOpSchemaGenerator(
         "AveragePool",
         "average",
-        "The output of each pooling window is divided by the number of elements exclude pad."));
+        "The output of each pooling window is divided by the number of elements exclude pad.")));
 
-ONNX_OPERATOR_SCHEMA(AveragePool)
-    .SinceVersion(7)
+ONNX_OPERATOR_SCHEMA(AveragePool, ONNX_DOMAIN, 7, OpSchema()
     .FillUsing(PoolOpSchemaGenerator(
         "AveragePool",
         "average",
@@ -239,12 +238,12 @@ ONNX_OPERATOR_SCHEMA(AveragePool)
         "count_include_pad",
         "Whether include pad pixels when calculating values for the edges.",
         AttributeProto::INT,
-        static_cast<int64_t>(0));
+        static_cast<int64_t>(0)));
 
-ONNX_OPERATOR_SCHEMA(MaxPool).FillUsing(PoolOpSchemaGenerator(
+ONNX_OPERATOR_SCHEMA(MaxPool, ONNX_DOMAIN, 1, OpSchema().FillUsing(PoolOpSchemaGenerator(
     "MaxPool",
     "max",
-    "The output of each pooling window is maximum number of elements exclude pad."));
+    "The output of each pooling window is maximum number of elements exclude pad.")));
 
 } // namespace ONNX_NAMESPACE
 
@@ -259,7 +258,6 @@ std::function<void(OpSchema&)> LpPoolOpSchemaGenerator(const char* name) {
  data into the output tensor Y for further processing.)DOC";
     ReplaceAll(doc, "{name}", name);
     schema.SetDoc(doc);
-    schema.SinceVersion(2);
     schema.Attr(
         "kernel_shape",
         "The size of the kernel along each axis.",
@@ -309,7 +307,7 @@ std::function<void(OpSchema&)> LpPoolOpSchemaGenerator(const char* name) {
   };
 }
 
-ONNX_OPERATOR_SCHEMA(LpPool).FillUsing(LpPoolOpSchemaGenerator("LpPool"));
+ONNX_OPERATOR_SCHEMA(LpPool, ONNX_DOMAIN, 2, OpSchema().FillUsing(LpPoolOpSchemaGenerator("LpPool")));
 
 } // namespace ONNX_NAMESPACE
 
@@ -395,7 +393,7 @@ std::function<void(OpSchema&)> RoiPoolOpSchemaGenerator(const char* name) {
   };
 }
 
-ONNX_OPERATOR_SCHEMA(MaxRoiPool).FillUsing(RoiPoolOpSchemaGenerator("max"));
+ONNX_OPERATOR_SCHEMA(MaxRoiPool, ONNX_DOMAIN, 1, OpSchema().FillUsing(RoiPoolOpSchemaGenerator("max")));
 } // namespace ONNX_NAMESPACE
 
 namespace ONNX_NAMESPACE {
@@ -483,7 +481,7 @@ computes the output.)DOC";
   };
 }
 
-ONNX_OPERATOR_SCHEMA(Conv).FillUsing(ConvOpSchemaGenerator("a filter"));
+ONNX_OPERATOR_SCHEMA(Conv, ONNX_DOMAIN, 1, OpSchema().FillUsing(ConvOpSchemaGenerator("a filter")));
 
 } // namespace ONNX_NAMESPACE
 
@@ -575,8 +573,8 @@ and computes the output.)DOC";
   };
 }
 
-ONNX_OPERATOR_SCHEMA(ConvTranspose)
-    .FillUsing(ConvTransposeOpSchemaGenerator("a filter"));
+ONNX_OPERATOR_SCHEMA(ConvTranspose, ONNX_DOMAIN, 1, OpSchema()
+    .FillUsing(ConvTransposeOpSchemaGenerator("a filter")));
 
 } // namespace ONNX_NAMESPACE
 
@@ -646,13 +644,11 @@ std::function<void(OpSchema&)> GlobalPoolingOpSchemaGenerator(
         [](InferenceContext& ctx) { gloablPoolTypeShapeInference(ctx); });
   };
 }
-ONNX_OPERATOR_SCHEMA(GlobalAveragePool)
-    .FillUsing(GlobalPoolingOpSchemaGenerator("AveragePool", "average"));
-ONNX_OPERATOR_SCHEMA(GlobalMaxPool)
-    .FillUsing(GlobalPoolingOpSchemaGenerator("MaxPool", "max"));
-} // namespace ONNX_NAMESPACE
+ONNX_OPERATOR_SCHEMA(GlobalAveragePool, ONNX_DOMAIN, 1, OpSchema()
+    .FillUsing(GlobalPoolingOpSchemaGenerator("AveragePool", "average")));
+ONNX_OPERATOR_SCHEMA(GlobalMaxPool, ONNX_DOMAIN, 1, OpSchema()
+    .FillUsing(GlobalPoolingOpSchemaGenerator("MaxPool", "max")));
 
-namespace ONNX_NAMESPACE {
 std::function<void(OpSchema&)> GlobalLpPoolingOpSchemaGenerator(
     const char* op_type,
     const char* op) {
@@ -664,7 +660,6 @@ std::function<void(OpSchema&)> GlobalLpPoolingOpSchemaGenerator(
     ReplaceAll(doc, "{op_type}", op_type);
     ReplaceAll(doc, "{op}", op);
     schema.SetDoc(doc);
-    schema.SinceVersion(2);
     schema.Attr(
         "p",
         "p value of the Lp norm used to pool over the input data, default is 2.",
@@ -697,12 +692,10 @@ std::function<void(OpSchema&)> GlobalLpPoolingOpSchemaGenerator(
   };
 }
 
-ONNX_OPERATOR_SCHEMA(GlobalLpPool)
-    .FillUsing(GlobalLpPoolingOpSchemaGenerator("LpPool", "lp pool"));
-} // namespace ONNX_NAMESPACE
+ONNX_OPERATOR_SCHEMA(GlobalLpPool, ONNX_DOMAIN, 2, OpSchema()
+    .FillUsing(GlobalLpPoolingOpSchemaGenerator("LpPool", "lp pool")));
 
-ONNX_OPERATOR_SCHEMA(BatchNormalization)
-    .SinceVersion(6)
+ONNX_OPERATOR_SCHEMA(BatchNormalization, ONNX_DOMAIN, 6, OpSchema()
     .NumOutputs({1, 5})
     .SetDoc(R"DOC(
 Carries out batch normalization as described in the paper
@@ -808,10 +801,10 @@ Output case #2: Y (test mode)
       propagateShapeAndTypeFromFirstInput(ctx);
       // TODO in training mode, it may be possible to infer some of
       // the other outputs as well.
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(InstanceNormalization)
-    .SinceVersion(6)
+
+ONNX_OPERATOR_SCHEMA(InstanceNormalization, ONNX_DOMAIN, 6, OpSchema()
     .SetDoc(R"DOC(
 Carries out instance normalization as described in the paper
 https://arxiv.org/abs/1607.08022.
@@ -846,9 +839,9 @@ where mean and variance are computed per instance per channel.
         "Constrain input and output types to float tensors.")
     .TypeAndShapeInferenceFunction([](InferenceContext& ctx) {
       propagateShapeAndTypeFromFirstInput(ctx);
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(LpNormalization)
+ONNX_OPERATOR_SCHEMA(LpNormalization, ONNX_DOMAIN, 1, OpSchema()
     .Input(0, "input", "Input matrix", "T")
     .Output(0, "output", "Matrix after normalization", "T")
     .TypeConstraint(
@@ -870,10 +863,9 @@ Given a matrix, apply Lp-normalization along the provided axis.
         static_cast<int64_t>(2))
     .TypeAndShapeInferenceFunction([](InferenceContext& ctx) {
       propagateShapeAndTypeFromFirstInput(ctx);
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(Dropout)
-    .SinceVersion(6)
+ONNX_OPERATOR_SCHEMA(Dropout, ONNX_DOMAIN, 6, OpSchema()
     .SetDoc(R"DOC(
 Dropout takes one input data (Tensor<float>) and produces two Tensor outputs,
 output (Tensor<float>) and mask (Tensor<bool>). Depending on whether it is in
@@ -904,9 +896,9 @@ the training phase, so during testing nothing needs to be done.
         "T",
         {"tensor(float16)", "tensor(float)", "tensor(double)"},
         "Constrain input and output types to float tensors.")
-    .TypeAndShapeInferenceFunction(propagateShapeAndTypeFromFirstInput);
+    .TypeAndShapeInferenceFunction(propagateShapeAndTypeFromFirstInput));
 
-ONNX_OPERATOR_SCHEMA(Flatten)
+ONNX_OPERATOR_SCHEMA(Flatten, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
 Flattens the input tensor into a 2D matrix. If input tensor has shape
 (d_0, d_1, ... d_n) then the output will have shape
@@ -949,9 +941,9 @@ Flattens the input tensor into a 2D matrix. If input tensor has shape
             {multiplyDims(input_shape, 0, axis),
              multiplyDims(input_shape, axis, rank)});
       }
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(LRN)
+ONNX_OPERATOR_SCHEMA(LRN, ONNX_DOMAIN, 1, OpSchema()
     .Attr("size", "The number of channels to sum over", AttributeProto::INT)
     .Attr("alpha", "Scaling parameter, default is 1e-4f.", AttributeProto::FLOAT, 0.0001f)
     .Attr("beta", "The exponent, default is 0.75f", AttributeProto::FLOAT, 0.75f)
@@ -989,4 +981,6 @@ where max(0, c - floor((size - 1) / 2)) <= i <= min(C - 1, c + ceil((size - 1) /
 
 Y[n, c, d1, ..., dk] = X[n, c, d1, ..., dk] / (bias + alpha / size * square_sum[n, c, d1, ..., dk] ) ^ beta
 )DOC")
-    .TypeAndShapeInferenceFunction(propagateShapeAndTypeFromFirstInput);
+    .TypeAndShapeInferenceFunction(propagateShapeAndTypeFromFirstInput));
+
+} // namespace ONNX_NAMESPACE

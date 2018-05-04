@@ -3,10 +3,10 @@
 
 #include "onnx/defs/schema.h"
 
-using namespace ONNX_NAMESPACE;
 #ifdef ONNX_ML
-ONNX_OPERATOR_SCHEMA(ArrayFeatureExtractor)
-    .SetDomain("ai.onnx.ml")
+namespace ONNX_NAMESPACE
+{
+ONNX_OPERATOR_SCHEMA(ArrayFeatureExtractor, AI_ONNX_ML_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
     Select a subset of the data X based on the indices provided Y.
 )DOC")
@@ -24,10 +24,9 @@ ONNX_OPERATOR_SCHEMA(ArrayFeatureExtractor)
          "tensor(int64)",
          "tensor(int32)",
          "tensor(string)"},
-        "allowed types.");
+        "allowed types."));
 
-ONNX_OPERATOR_SCHEMA(Binarizer)
-    .SetDomain("ai.onnx.ml")
+ONNX_OPERATOR_SCHEMA(Binarizer, AI_ONNX_ML_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
     Makes values 1 or 0 based on a single threshold.
 )DOC")
@@ -41,10 +40,9 @@ ONNX_OPERATOR_SCHEMA(Binarizer)
         "threshold",
         "Values greater than this are set to 1, else set to 0",
         AttributeProto::FLOAT,
-        0.f);
+        0.f));
 
-ONNX_OPERATOR_SCHEMA(CastMap)
-    .SetDomain("ai.onnx.ml")
+ONNX_OPERATOR_SCHEMA(CastMap, AI_ONNX_ML_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
     Converts a map to a tensor.  Map key must be int64 and the values will be ordered
     in ascending order based on this key.  Supports dense packing or sparse packing.
@@ -90,11 +88,9 @@ ONNX_OPERATOR_SCHEMA(CastMap)
       } else if (0 == cast_to.compare("TO_STRING")) {
         output_type->set_elem_type(TensorProto::STRING);
       }
-    });
+    }));
 
-
-ONNX_OPERATOR_SCHEMA(CategoryMapper)
-    .SetDomain("ai.onnx.ml")
+ONNX_OPERATOR_SCHEMA(CategoryMapper, AI_ONNX_ML_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
     Convert strings to int64s and vice versa.
     Takes in a map to use for the conversion.
@@ -147,10 +143,9 @@ ONNX_OPERATOR_SCHEMA(CategoryMapper)
       } else if (TensorProto::INT64 == input_elem_type) {
         output_elem_type->set_elem_type(TensorProto::STRING);
       }
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(DictVectorizer)
-    .SetDomain("ai.onnx.ml")
+ONNX_OPERATOR_SCHEMA(DictVectorizer, AI_ONNX_ML_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
     Uses an index mapping to convert a dictionary to an array.
     The output array will be equal in length to the index mapping vector parameter.
@@ -195,10 +190,9 @@ ONNX_OPERATOR_SCHEMA(DictVectorizer)
                                  .elem_type();
       auto output_elem_type = ctx.getOutputType(0)->mutable_tensor_type();
       output_elem_type->set_elem_type(input_elem_type);
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(Imputer)
-    .SetDomain("ai.onnx.ml")
+ONNX_OPERATOR_SCHEMA(Imputer, AI_ONNX_ML_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
     Replace imputs that equal replaceValue/s  with  imputeValue/s.
     All other inputs are copied to the output unchanged.
@@ -231,10 +225,9 @@ ONNX_OPERATOR_SCHEMA(Imputer)
         "replaced_value_int64",
         "value that needs replacing",
         AttributeProto::INT,
-        static_cast<int64_t>(0));
+        static_cast<int64_t>(0)));
 
-ONNX_OPERATOR_SCHEMA(LabelEncoder)
-    .SetDomain("ai.onnx.ml")
+ONNX_OPERATOR_SCHEMA(LabelEncoder, AI_ONNX_ML_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
     Convert class label to their integral type and vice versa.
     In both cases the operator is instantiated with the list of class strings.
@@ -273,10 +266,9 @@ ONNX_OPERATOR_SCHEMA(LabelEncoder)
       } else if (TensorProto::INT64 == input_elem_type) {
         output_elem_type->set_elem_type(TensorProto::STRING);
       }
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(LinearClassifier)
-    .SetDomain("ai.onnx.ml")
+ONNX_OPERATOR_SCHEMA(LinearClassifier, AI_ONNX_ML_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
     Linear classifier prediction (choose class)
 )DOC")
@@ -332,10 +324,9 @@ ONNX_OPERATOR_SCHEMA(LinearClassifier)
       } else {
         output_elem_type->set_elem_type(TensorProto::INT64);
       }
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(LinearRegressor)
-    .SetDomain("ai.onnx.ml")
+ONNX_OPERATOR_SCHEMA(LinearRegressor, AI_ONNX_ML_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
     Generalized linear regression evaluation.
     If targets is set to 1 (default) then univariate regression is performed.
@@ -373,10 +364,9 @@ ONNX_OPERATOR_SCHEMA(LinearRegressor)
         "targets",
         "total number of regression targets (default is 1)",
         AttributeProto::INT,
-        static_cast<int64_t>(1));
+        static_cast<int64_t>(1)));
 
-ONNX_OPERATOR_SCHEMA(Normalizer)
-    .SetDomain("ai.onnx.ml")
+ONNX_OPERATOR_SCHEMA(Normalizer, AI_ONNX_ML_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
     Normalize the input.  There are three normalization modes,
     which have the corresponding formulas:
@@ -394,10 +384,9 @@ ONNX_OPERATOR_SCHEMA(Normalizer)
         "norm",
         "enum 'MAX', 'L1', 'L2'",
         AttributeProto::STRING,
-        std::string("MAX"));
+        std::string("MAX")));
 
-ONNX_OPERATOR_SCHEMA(OneHotEncoder)
-    .SetDomain("ai.onnx.ml")
+ONNX_OPERATOR_SCHEMA(OneHotEncoder, AI_ONNX_ML_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
     Replace the inputs with an array of ones and zeros, where the only
     one is the zero-based category that was passed in.  The total category count
@@ -435,10 +424,9 @@ ONNX_OPERATOR_SCHEMA(OneHotEncoder)
         "zeros",
         "if true and category is not present, will return all zeros, if false and missing category, operator will return false. Default is true (1).",
         AttributeProto::INT,
-        static_cast<int64_t>(1));
+        static_cast<int64_t>(1)));
 
-ONNX_OPERATOR_SCHEMA(Scaler)
-    .SetDomain("ai.onnx.ml")
+ONNX_OPERATOR_SCHEMA(Scaler, AI_ONNX_ML_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
     Rescale input data, for example to standardize features by removing the mean and scaling to unit variance.
 )DOC")
@@ -457,10 +445,9 @@ ONNX_OPERATOR_SCHEMA(Scaler)
         "offset",
         "first, offset by this, must be same length as scale",
         AttributeProto::FLOATS,
-        OPTIONAL);
+        OPTIONAL));
 
-ONNX_OPERATOR_SCHEMA(SVMClassifier)
-    .SetDomain("ai.onnx.ml")
+ONNX_OPERATOR_SCHEMA(SVMClassifier, AI_ONNX_ML_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
     SVM classifier prediction
 )DOC")
@@ -529,10 +516,9 @@ ONNX_OPERATOR_SCHEMA(SVMClassifier)
       } else {
         output_elem_type->set_elem_type(TensorProto::INT64);
       }
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(SVMRegressor)
-    .SetDomain("ai.onnx.ml")
+ONNX_OPERATOR_SCHEMA(SVMRegressor, AI_ONNX_ML_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
     SVM regression prediction and one-class svm anomaly detection
 )DOC")
@@ -581,10 +567,9 @@ ONNX_OPERATOR_SCHEMA(SVMRegressor)
         "post eval transform for score, enum NONE, SOFTMAX, LOGISTIC, SOFTMAX_ZERO, PROBIT",
         AttributeProto::STRING,
         std::string("NONE"))
-    .Attr("rho", "", AttributeProto::FLOATS, OPTIONAL);
+    .Attr("rho", "", AttributeProto::FLOATS, OPTIONAL));
 
-ONNX_OPERATOR_SCHEMA(TreeEnsembleClassifier)
-    .SetDomain("ai.onnx.ml")
+ONNX_OPERATOR_SCHEMA(TreeEnsembleClassifier, AI_ONNX_ML_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
     Tree Ensemble classifier.  Returns the top class for each input in N.
     All args with nodes_ are fields of a tuple of tree nodes, and
@@ -705,10 +690,9 @@ ONNX_OPERATOR_SCHEMA(TreeEnsembleClassifier)
       } else {
         output_elem_type->set_elem_type(TensorProto::INT64);
       }
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(TreeEnsembleRegressor)
-    .SetDomain("ai.onnx.ml")
+ONNX_OPERATOR_SCHEMA(TreeEnsembleRegressor, AI_ONNX_ML_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
     Tree Ensemble regressor.  Returns the regressed values for each input in N.
     All args with nodes_ are fields of a tuple of tree nodes, and
@@ -807,10 +791,9 @@ ONNX_OPERATOR_SCHEMA(TreeEnsembleRegressor)
         "base_values",
         "base values for regression, added to final score, size must be the same as n_outputs or can be left unassigned (assumed 0)",
         AttributeProto::FLOATS,
-        OPTIONAL);
+        OPTIONAL));
 
-ONNX_OPERATOR_SCHEMA(ZipMap)
-    .SetDomain("ai.onnx.ml")
+ONNX_OPERATOR_SCHEMA(ZipMap, AI_ONNX_ML_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
     Makes a map from the input and the attributes.
     Assumes input 0 are the values, and the keys are specified by the attributes.
@@ -855,10 +838,9 @@ ONNX_OPERATOR_SCHEMA(ZipMap)
       if (result && !classlabels_int64s.empty()) {
         output_map_type->set_key_type(TensorProto::INT64);
       }
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(FeatureVectorizer)
-    .SetDomain("ai.onnx.ml")
+ONNX_OPERATOR_SCHEMA(FeatureVectorizer, AI_ONNX_ML_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
     Concatenates input features into one continuous output of floats.
     inputdimensions is the size of each input feature.
@@ -882,6 +864,7 @@ ONNX_OPERATOR_SCHEMA(FeatureVectorizer)
         "inputdimensions",
         "the size of each input in the input list",
         AttributeProto::INTS,
-        OPTIONAL);
-
+        OPTIONAL));
+          
+}
 #endif

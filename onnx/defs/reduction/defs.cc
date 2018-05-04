@@ -77,31 +77,35 @@ False instead of True.)DOC";
   };
 }
 
-ONNX_OPERATOR_SCHEMA(ReduceMax).FillUsing(ReduceDocGenerator("max"));
+ONNX_OPERATOR_SCHEMA(ReduceMax, ONNX_DOMAIN, 1, OpSchema()
+    .FillUsing(ReduceDocGenerator("max")));
 
-ONNX_OPERATOR_SCHEMA(ReduceMin).FillUsing(ReduceDocGenerator("min"));
+ONNX_OPERATOR_SCHEMA(ReduceMin, ONNX_DOMAIN, 1, OpSchema()
+    .FillUsing(ReduceDocGenerator("min")));
 
-ONNX_OPERATOR_SCHEMA(ReduceSum).FillUsing(ReduceDocGenerator("sum"));
+ONNX_OPERATOR_SCHEMA(ReduceSum, ONNX_DOMAIN, 1, OpSchema()
+    .FillUsing(ReduceDocGenerator("sum")));
 
-ONNX_OPERATOR_SCHEMA(ReduceSumSquare)
-    .FillUsing(ReduceDocGenerator("sum square"));
+ONNX_OPERATOR_SCHEMA(ReduceSumSquare, ONNX_DOMAIN, 1, OpSchema()
+    .FillUsing(ReduceDocGenerator("sum square")));
 
-ONNX_OPERATOR_SCHEMA(ReduceMean).FillUsing(ReduceDocGenerator("mean"));
+ONNX_OPERATOR_SCHEMA(ReduceMean, ONNX_DOMAIN, 1, OpSchema()
+    .FillUsing(ReduceDocGenerator("mean")));
 
-ONNX_OPERATOR_SCHEMA(ReduceProd).FillUsing(ReduceDocGenerator("product"));
+ONNX_OPERATOR_SCHEMA(ReduceProd, ONNX_DOMAIN, 1, OpSchema()
+    .FillUsing(ReduceDocGenerator("product")));
 
-ONNX_OPERATOR_SCHEMA(ReduceLogSum).FillUsing(ReduceDocGenerator("log sum"));
+ONNX_OPERATOR_SCHEMA(ReduceLogSum, ONNX_DOMAIN, 1, OpSchema()
+    .FillUsing(ReduceDocGenerator("log sum")));
 
-ONNX_OPERATOR_SCHEMA(ReduceLogSumExp)
-    .FillUsing(ReduceDocGenerator("log sum exponent"));
+ONNX_OPERATOR_SCHEMA(ReduceLogSumExp, ONNX_DOMAIN, 1, OpSchema()
+    .FillUsing(ReduceDocGenerator("log sum exponent")));
 
-ONNX_OPERATOR_SCHEMA(ReduceL1).FillUsing(ReduceDocGenerator("L1 norm"));
+ONNX_OPERATOR_SCHEMA(ReduceL1, ONNX_DOMAIN, 1, OpSchema()
+    .FillUsing(ReduceDocGenerator("L1 norm")));
 
-ONNX_OPERATOR_SCHEMA(ReduceL2).FillUsing(ReduceDocGenerator("L2 norm"));
-
-} // namespace ONNX_NAMESPACE
-
-namespace ONNX_NAMESPACE {
+ONNX_OPERATOR_SCHEMA(ReduceL2, ONNX_DOMAIN, 1, OpSchema()
+    .FillUsing(ReduceDocGenerator("L2 norm")));
 
 std::function<void(OpSchema&)> ArgReduceDocGenerator(const char* name) {
   return [=](OpSchema& schema) {
@@ -177,8 +181,8 @@ The type of the output tensor is integer.)DOC";
   };
 } // namespace ONNX_NAMESPACE
 
-ONNX_OPERATOR_SCHEMA(ArgMax).FillUsing(ArgReduceDocGenerator("max"));
+ONNX_OPERATOR_SCHEMA(ArgMax, ONNX_DOMAIN, 1, OpSchema().FillUsing(ArgReduceDocGenerator("max")));
 
-ONNX_OPERATOR_SCHEMA(ArgMin).FillUsing(ArgReduceDocGenerator("min"));
+ONNX_OPERATOR_SCHEMA(ArgMin, ONNX_DOMAIN, 1, OpSchema().FillUsing(ArgReduceDocGenerator("min")));
 
 } // namespace ONNX_NAMESPACE

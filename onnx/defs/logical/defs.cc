@@ -3,8 +3,6 @@
 
 #include "onnx/defs/schema.h"
 
-using namespace ONNX_NAMESPACE;
-
 namespace ONNX_NAMESPACE {
 
 inline void logicalOpInference(InferenceContext& ctx) {
@@ -37,49 +35,49 @@ detailed description of the broadcasting rules.
     };
 }
 
-ONNX_OPERATOR_SCHEMA(And)
+ONNX_OPERATOR_SCHEMA(And, ONNX_DOMAIN, 1, OpSchema()
     .FillUsing(BinaryLogicDocGenerator("and"))
     .TypeConstraint("T", { "tensor(bool)" },
                     "Constrains input to boolean tensor.")
     .TypeConstraint("T1", { "tensor(bool)" },
-                    "Constrains output to boolean tensor.");
+                    "Constrains output to boolean tensor."));
 
-ONNX_OPERATOR_SCHEMA(Or)
+ONNX_OPERATOR_SCHEMA(Or, ONNX_DOMAIN, 1, OpSchema()
     .FillUsing(BinaryLogicDocGenerator("or"))
     .TypeConstraint("T", { "tensor(bool)" },
                     "Constrains input to boolean tensor.")
     .TypeConstraint("T1", { "tensor(bool)" },
-                    "Constrains output to boolean tensor.");
+                    "Constrains output to boolean tensor."));
 
-ONNX_OPERATOR_SCHEMA(Xor)
+ONNX_OPERATOR_SCHEMA(Xor, ONNX_DOMAIN, 1, OpSchema()
     .FillUsing(BinaryLogicDocGenerator("xor"))
     .TypeConstraint("T", { "tensor(bool)" },
                     "Constrains input to boolean tensor.")
     .TypeConstraint("T1", { "tensor(bool)" },
-                    "Constrains output to boolean tensor.");
+                    "Constrains output to boolean tensor."));
 
-ONNX_OPERATOR_SCHEMA(Greater)
+ONNX_OPERATOR_SCHEMA(Greater, ONNX_DOMAIN, 1, OpSchema()
     .FillUsing(BinaryLogicDocGenerator("greater"))
     .TypeConstraint("T", { "tensor(float16)", "tensor(float)", "tensor(double)" },
                     "Constrains input to float tensors.")
     .TypeConstraint("T1", { "tensor(bool)" },
-                    "Constrains output to boolean tensor.");
+                    "Constrains output to boolean tensor."));
 
-ONNX_OPERATOR_SCHEMA(Less)
+ONNX_OPERATOR_SCHEMA(Less, ONNX_DOMAIN, 1, OpSchema()
     .FillUsing(BinaryLogicDocGenerator("less"))
     .TypeConstraint("T", { "tensor(float16)", "tensor(float)", "tensor(double)" },
                     "Constrains input to float tensors.")
     .TypeConstraint("T1", { "tensor(bool)" },
-                    "Constrains output to boolean tensor.");
+                    "Constrains output to boolean tensor."));
 
-ONNX_OPERATOR_SCHEMA(Equal)
+ONNX_OPERATOR_SCHEMA(Equal, ONNX_DOMAIN, 1, OpSchema()
     .FillUsing(BinaryLogicDocGenerator("equal"))
     .TypeConstraint("T", { "tensor(bool)", "tensor(int32)", "tensor(int64)" },
                     "Constrains input to integral tensors.")
     .TypeConstraint("T1", { "tensor(bool)" },
-                    "Constrains output to boolean tensor.");
+                    "Constrains output to boolean tensor."));
 
-ONNX_OPERATOR_SCHEMA(Not)
+ONNX_OPERATOR_SCHEMA(Not, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
 Returns the negation of the input tensor element-wise.
 )DOC")
@@ -87,6 +85,6 @@ Returns the negation of the input tensor element-wise.
     .Output(0, "Y", "Output tensor", "T")
     .TypeConstraint("T", { "tensor(bool)" },
                     "Constrains input/output to boolean tensors.")
-	.TypeAndShapeInferenceFunction(logicalOpInference);
+	.TypeAndShapeInferenceFunction(logicalOpInference));
 
 }  // namespace ONNX_NAMESPACE

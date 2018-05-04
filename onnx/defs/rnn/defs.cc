@@ -3,8 +3,6 @@
 
 #include "onnx/defs/schema.h"
 
-using namespace ONNX_NAMESPACE;
-
 namespace ONNX_NAMESPACE {
 
 // Warning: This function may be shared with old versions in old.cc.
@@ -60,7 +58,7 @@ std::function<void(OpSchema&)> RNNDocGenerator(const char* /*name*/) {
     };
 }
 
-ONNX_OPERATOR_SCHEMA(RNN)
+ONNX_OPERATOR_SCHEMA(RNN, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
 Computes an one-layer simple RNN. This operator is usually supported
 via some custom implementation such as CuDNN.
@@ -142,10 +140,10 @@ Equations (Default: f=Tanh):
            "`[num_directions, 2*hidden_size]`. Optional: If not specified - assumed "
            "to be 0.", "T",
         OpSchema::Optional)
-    .FillUsing(RNNDocGenerator("RNN"));
+    .FillUsing(RNNDocGenerator("RNN")));
 
 
-ONNX_OPERATOR_SCHEMA(GRU)
+ONNX_OPERATOR_SCHEMA(GRU, ONNX_DOMAIN, 3, OpSchema()
     .SetDoc(R"DOC(
 Computes an one-layer GRU. This operator is usually supported via some custom
 implementation such as CuDNN.
@@ -226,7 +224,6 @@ Equations (Default: f=Sigmoid, g=Tanh):
           "for default if not specified.",
           AttributeProto::STRINGS,
           OPTIONAL)
-    .SinceVersion(3)
     .Attr("linear_before_reset", "When computing the output of the hidden gate, "
           "apply the linear transformation before multiplying by the output of the "
           "reset gate.",
@@ -246,10 +243,10 @@ Equations (Default: f=Sigmoid, g=Tanh):
            "has shape `[num_directions, 6*hidden_size]`. Optional: If not specified "
            "- assumed to be 0", "T",
         OpSchema::Optional)
-    .FillUsing(RNNDocGenerator("GRU"));
+    .FillUsing(RNNDocGenerator("GRU")));
 
 
-ONNX_OPERATOR_SCHEMA(LSTM)
+ONNX_OPERATOR_SCHEMA(LSTM, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
 Computes an one-layer LSTM. This operator is usually supported via some
 custom implementation such as CuDNN.
@@ -368,5 +365,5 @@ Equations (Default: f=Sigmoid, g=Tanh, h=Tanh):
     .FillUsing(RNNDocGenerator("LSTM"))
     .Output(2, "Y_c",
             "The last output value of the cell. It has shape "
-            "`[num_directions, batch_size, hidden_size]`.", "T", OpSchema::Optional);
+            "`[num_directions, batch_size, hidden_size]`.", "T", OpSchema::Optional));
 }  // namespace ONNX_NAMESPACE

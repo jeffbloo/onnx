@@ -24,7 +24,8 @@ namespace ONNX_NAMESPACE {
 
 using OperatorSetVersion = int;
 
-constexpr const char* ONNX_DOMAIN = "";
+constexpr const char* AI_ONNX_ML_DOMAIN_NAME = "ai.onnx.ml";
+constexpr const char* ONNX_DOMAIN_NAME = "";
 constexpr bool OPTIONAL = false;
 
 using DataTypeSet = std::unordered_set<DataType>;
@@ -211,8 +212,14 @@ class OpSchema final {
   // Functions to do documentation for the operator schema.
   OpSchema& SetDoc(std::string doc);
 
+  // Functions to specify name for the operator schema.
+  OpSchema& SetName(std::string name);
+
+  // Functions to specify code location for the operator schema.
+  OpSchema& SetLocation(std::string file, int line);
+
   // Functions to specify domain for the operator schema.
-  // Default domain value (ONNX_DOMAIN) means it's ONNX domain.
+  // Default domain value (ONNX_DOMAIN_NAME) means it's ONNX domain.
   OpSchema& SetDomain(std::string domain);
 
   struct Attribute final {
@@ -454,7 +461,7 @@ class OpSchema final {
   std::string file_;
   std::string doc_;
   // Default domain value ("") means it's ONNX domain.
-  std::string domain_ = ONNX_DOMAIN;
+  std::string domain_ = ONNX_DOMAIN_NAME;
   std::map<std::string, Attribute> attributes_{};
   bool allows_unchecked_attributes_ = false;
   std::vector<FormalParameter> inputs_;
@@ -492,7 +499,7 @@ class OpSchemaRegistry final {
       // Increase the highest version when you make BC-breaking changes to the
       // operator schema on specific domain. Update the lowest version when it's
       // determined to remove too old version history.
-      map_[ONNX_DOMAIN] = std::make_pair(1, 7);
+      map_[ONNX_DOMAIN_NAME] = std::make_pair(1, 7);
       map_["ai.onnx.ml"] = std::make_pair(1, 1);
     }
 
@@ -579,10 +586,10 @@ class OpSchemaRegistry final {
   };
 
   // Return the latest schema for an operator in specified domain.
-  // Domain with default value ONNX_DOMAIN means ONNX.
+  // Domain with default value ONNX_DOMAIN_NAME means ONNX.
   static const OpSchema* Schema(
       const std::string& key,
-      const std::string& domain = ONNX_DOMAIN) {
+      const std::string& domain = ONNX_DOMAIN_NAME) {
     auto& m = map();
     if (m.count(key) && m[key].count(domain)) {
       return &m[key][domain].rbegin()->second;
@@ -593,11 +600,11 @@ class OpSchemaRegistry final {
 
   // Return the schema with biggest version, which is not greater than specified
   // <maxInclusiveVersion> in specified domain. Domain with default value
-  // ONNX_DOMAIN means ONNX.
+  // ONNX_DOMAIN_NAME means ONNX.
   static const OpSchema* Schema(
       const std::string& key,
       const int maxInclusiveVersion,
-      const std::string& domain = ONNX_DOMAIN) {
+      const std::string& domain = ONNX_DOMAIN_NAME) {
     auto& m = map();
     if (m.count(key) && m[key].count(domain)) {
       auto pos = m[key][domain].lower_bound(maxInclusiveVersion);
@@ -659,14 +666,21 @@ class OpSchemaRegistry final {
   }
 };
 
-#define ONNX_OPERATOR_SCHEMA(name) \
-  ONNX_OPERATOR_SCHEMA_UNIQ_HELPER(__COUNTER__, name)
-#define ONNX_OPERATOR_SCHEMA_UNIQ_HELPER(Counter, name) \
-  ONNX_OPERATOR_SCHEMA_UNIQ(Counter, name)
-#define ONNX_OPERATOR_SCHEMA_UNIQ(Counter, name)                 \
+// ONNX_OPERATOR_SCHEMA is implemented either with static registration or by exposing
+// a factory method.  
+#ifndef ONNX_NON_STATIC_SCHEMA_INITIALIZATION
+#define ONNX_OPERATOR_SCHEMA(name, domain, ver, impl) \
   static ONNX_NAMESPACE::OpSchemaRegistry::OpSchemaRegisterOnce( \
-      op_schema_register_once##name##Counter) =                  \
-      OpSchema(#name, __FILE__, __LINE__)
+      op_schema_register_once_##name##_##domain##_ver##ver) = impl\
+      .SetName(#name).SetDomain(domain##_NAME).SinceVersion(ver).SetLocation(__FILE__, __LINE__)
+#else
+template <typename T> OpSchema GetOpSchema();
+#define ONNX_OPERATOR_SCHEMA(name, domain, ver, impl) \
+    class name##_##domain##_ver##ver##_OpSchemaId{}; \
+    template<> OpSchema ONNX_NAMESPACE::GetOpSchema< name##_##domain##_ver##ver##_OpSchemaId>(){ \
+      return impl.SetName(#name).SetDomain(domain##_NAME).SinceVersion(ver).SetLocation(__FILE__, __LINE__); \
+    }
+#endif
 
 // Helper function
 size_t ReplaceAll(std::string& s, const char* from, const char* to);

@@ -99,7 +99,7 @@ PYBIND11_MODULE(onnx_cpp2py_export, onnx_cpp2py_export) {
         return OpSchemaRegistry::Schema(op_type, domain) != nullptr;
       },
       "op_type"_a,
-      "domain"_a = ONNX_DOMAIN);
+      "domain"_a = ONNX_DOMAIN_NAME);
   defs.def(
       "schema_version_map",
       []() -> std::unordered_map<std::string, std::pair<int, int>> {
@@ -120,7 +120,7 @@ PYBIND11_MODULE(onnx_cpp2py_export, onnx_cpp2py_export) {
           },
           "op_type"_a,
           "max_inclusive_version"_a,
-          "domain"_a = ONNX_DOMAIN)
+          "domain"_a = ONNX_DOMAIN_NAME)
       .def(
           "get_schema",
           [](const std::string& op_type,
@@ -133,7 +133,7 @@ PYBIND11_MODULE(onnx_cpp2py_export, onnx_cpp2py_export) {
             return *schema;
           },
           "op_type"_a,
-          "domain"_a = ONNX_DOMAIN);
+          "domain"_a = ONNX_DOMAIN_NAME);
 
   defs.def("get_all_schemas", []() -> const std::vector<OpSchema> {
     return OpSchemaRegistry::get_all_schemas();

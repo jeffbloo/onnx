@@ -3,9 +3,8 @@
 
 #include "onnx/defs/schema.h"
 
-using namespace ONNX_NAMESPACE;
-
-namespace ONNX_NAMESPACE {
+namespace ONNX_NAMESPACE
+{
 static std::string pads_doc =
     "Padding for the beginning and ending along each axis, it can take any value greater "
     "than or equal to 0. The value represent the number of pixels added to the beginning "
@@ -21,10 +20,8 @@ static std::string auto_pad_doc =
     "beginning for SAME_LOWER. VALID mean no padding. DEPRECATION NOTE: auto_pad is "
     "only intended to support legacy uses, and for framework authors, one is explicitly "
     "encouraged to use explicit padding specified in the pads attribute.";
-} // namespace ONNX_NAMESPACE
 
-ONNX_OPERATOR_SCHEMA(LpPool)
-    .SinceVersion(1)
+ONNX_OPERATOR_SCHEMA(LpPool, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
  LpPool consumes an input tensor X and applies Lp pooling across the
  the tensor according to kernel sizes, stride sizes, and pad lengths.
@@ -70,10 +67,9 @@ ONNX_OPERATOR_SCHEMA(LpPool)
     .TypeConstraint(
         "T",
         {"tensor(float16)", "tensor(float)", "tensor(double)"},
-        "Constrain input and output types to float tensors.");
+        "Constrain input and output types to float tensors."));
 
-ONNX_OPERATOR_SCHEMA(GlobalLpPool)
-    .SinceVersion(1)
+ONNX_OPERATOR_SCHEMA(GlobalLpPool, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
  GlobalLpPool consumes an input tensor X and applies lp pool pooling across the
  the values in the same channel. This is equivalent to LpPool with kernel size
@@ -103,10 +99,9 @@ ONNX_OPERATOR_SCHEMA(GlobalLpPool)
     .TypeConstraint(
         "T",
         {"tensor(float16)", "tensor(float)", "tensor(double)"},
-        "Constrain input and output types to float tensors.");
+        "Constrain input and output types to float tensors."));
 
-ONNX_OPERATOR_SCHEMA(BatchNormalization)
-    .SinceVersion(1)
+ONNX_OPERATOR_SCHEMA(BatchNormalization, ONNX_DOMAIN, 1, OpSchema()
     .NumOutputs({1, 5})
     .SetDoc(R"DOC(
 Carries out batch normalization as described in the paper
@@ -207,9 +202,9 @@ Output case #2: Y (test mode)
     .TypeConstraint(
         "T",
         {"tensor(float16)", "tensor(float)", "tensor(double)"},
-        "Constrain input and output types to float tensors.");
+        "Constrain input and output types to float tensors."));
 
-ONNX_OPERATOR_SCHEMA(InstanceNormalization)
+ONNX_OPERATOR_SCHEMA(InstanceNormalization, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
 Carries out instance normalization as described in the paper
 https://arxiv.org/abs/1607.08022.
@@ -242,9 +237,9 @@ where mean and variance are computed per instance per channel.
     .TypeConstraint(
         "T",
         {"tensor(float16)", "tensor(float)", "tensor(double)"},
-        "Constrain input and output types to float tensors.");
+        "Constrain input and output types to float tensors."));
 
-ONNX_OPERATOR_SCHEMA(Dropout)
+ONNX_OPERATOR_SCHEMA(Dropout, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
 Dropout takes one input data (Tensor<float>) and produces two Tensor outputs,
 output (Tensor<float>) and mask (Tensor<bool>). Depending on whether it is in
@@ -282,4 +277,5 @@ the training phase, so during testing nothing needs to be done.
     .TypeConstraint(
         "T",
         {"tensor(float16)", "tensor(float)", "tensor(double)"},
-        "Constrain input and output types to float tensors.");
+        "Constrain input and output types to float tensors."));
+}

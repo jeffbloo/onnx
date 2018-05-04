@@ -2,11 +2,13 @@
 // Licensed under the MIT license.
 
 #include "onnx/defs/schema.h"
-using namespace ONNX_NAMESPACE;
+namespace ONNX_NAMESPACE
+{
+  using SupportType = OpSchema::SupportType;
 
 using SupportType = ONNX_NAMESPACE::OpSchema::SupportType;
 
-ONNX_OPERATOR_SCHEMA(Affine)
+ONNX_OPERATOR_SCHEMA(Affine, ONNX_DOMAIN, 1, OpSchema()
     .SetSupportLevel(SupportType::EXPERIMENTAL)
     .SetDoc(R"DOC(
 Affine takes one input data (Tensor<T>) and produces one output data
@@ -19,10 +21,9 @@ is applied to the tensor elementwise.
     .Output(0, "Y", "1D output tensor", "T")
     .TypeConstraint("T", { "tensor(float16)", "tensor(float)", "tensor(double)" },
         "Constrain input and output types to float tensors.")
-    .TypeAndShapeInferenceFunction(propagateShapeAndTypeFromFirstInput);
+    .TypeAndShapeInferenceFunction(propagateShapeAndTypeFromFirstInput));
 
-
-ONNX_OPERATOR_SCHEMA(ThresholdedRelu)
+ONNX_OPERATOR_SCHEMA(ThresholdedRelu, ONNX_DOMAIN, 1, OpSchema()
     .SetSupportLevel(SupportType::EXPERIMENTAL)
     .SetDoc(R"DOC(
 ThresholdedRelu takes one input data (Tensor<T>) and produces one output data
@@ -37,9 +38,9 @@ is applied to the tensor elementwise.
     .Output(0, "Y", "Output tensor", "T")
     .TypeConstraint("T", { "tensor(float16)", "tensor(float)", "tensor(double)" },
         "Constrain input and output types to float tensors.")
-    .TypeAndShapeInferenceFunction(propagateShapeAndTypeFromFirstInput);
+    .TypeAndShapeInferenceFunction(propagateShapeAndTypeFromFirstInput));
 
-ONNX_OPERATOR_SCHEMA(ScaledTanh)
+ONNX_OPERATOR_SCHEMA(ScaledTanh, ONNX_DOMAIN, 1, OpSchema()
     .SetSupportLevel(SupportType::EXPERIMENTAL)
     .SetDoc(R"DOC(
 Calculates the scaled hyperbolic tangent of the given input tensor element-wise,
@@ -53,9 +54,9 @@ by providing the same input and output blobs.
         "computed element-wise", "T")
     .TypeConstraint("T", { "tensor(float16)", "tensor(float)", "tensor(double)" },
         "Constrain input and output types to float tensors.")
-    .TypeAndShapeInferenceFunction(propagateShapeAndTypeFromFirstInput);
+    .TypeAndShapeInferenceFunction(propagateShapeAndTypeFromFirstInput));
 
-ONNX_OPERATOR_SCHEMA(ParametricSoftplus)
+ONNX_OPERATOR_SCHEMA(ParametricSoftplus, ONNX_DOMAIN, 1, OpSchema()
     .SetSupportLevel(SupportType::EXPERIMENTAL)
     .SetDoc(R"DOC(
 ParametricSoftplus takes one input data (Tensor<T>) and produces one output data
@@ -68,9 +69,9 @@ the tensor elementwise.
     .Output(0, "Y", "1D input tensor", "T")
     .TypeConstraint("T", { "tensor(float16)", "tensor(float)", "tensor(double)" },
         "Constrain input and output types to float tensors.")
-    .TypeAndShapeInferenceFunction(propagateShapeAndTypeFromFirstInput);
+    .TypeAndShapeInferenceFunction(propagateShapeAndTypeFromFirstInput));
 
-ONNX_OPERATOR_SCHEMA(ConstantFill)
+ONNX_OPERATOR_SCHEMA(ConstantFill, ONNX_DOMAIN, 1, OpSchema()
     .SetSupportLevel(SupportType::EXPERIMENTAL)
     .SetDoc(R"DOC(
 The operator fills the elements of the output tensor with a constant value
@@ -160,9 +161,9 @@ NOTE: Currently, it supports data type of float, int32, int64, and bool.
             }
             updateOutputShape(ctx, 0, shape);
         }
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(GivenTensorFill)
+ONNX_OPERATOR_SCHEMA(GivenTensorFill, ONNX_DOMAIN, 1, OpSchema()
 .SetSupportLevel(SupportType::EXPERIMENTAL)
 .Input(0, "shape", "The shape of filled tensor", "T", OpSchema::Optional)
 .Output(0, "X", "The filled tensor", "T")
@@ -194,10 +195,9 @@ ONNX_OPERATOR_SCHEMA(GivenTensorFill)
             }
             updateOutputShape(ctx, 0, shape);
         }
-    });
+    }));
 
-
-ONNX_OPERATOR_SCHEMA(Scale)
+ONNX_OPERATOR_SCHEMA(Scale, ONNX_DOMAIN, 1, OpSchema()
     .SetSupportLevel(SupportType::EXPERIMENTAL)
     .Input(0, "input", "Input data to be scaled", "T")
     .Output(0, "output", "Output data after scaling", "T")
@@ -210,9 +210,9 @@ Scale takes one input data (Tensor<float>) and produces one output data
 (Tensor<float>) whose value is the input data tensor scaled element-wise.
 )DOC")
     .Attr("scale", "(float, default 1.0) the scale to apply.", AttributeProto::FLOAT, 1.0f)
-    .TypeAndShapeInferenceFunction(propagateShapeAndTypeFromFirstInput);
+    .TypeAndShapeInferenceFunction(propagateShapeAndTypeFromFirstInput));
 
-ONNX_OPERATOR_SCHEMA(GRUUnit)
+ONNX_OPERATOR_SCHEMA(GRUUnit, ONNX_DOMAIN, 1, OpSchema()
     .SetSupportLevel(SupportType::EXPERIMENTAL)
     .SetDoc(R"DOC(
 GRUUnit computes the activations of a standard GRU,
@@ -246,9 +246,9 @@ value at X[t][n] >= seqLengths[n].
     .TypeConstraint(
         "T",
         {"tensor(float16)", "tensor(float)", "tensor(double)"},
-        "Constrain input and output types to float tensors.");
+        "Constrain input and output types to float tensors."));
 
-ONNX_OPERATOR_SCHEMA(ATen)
+ONNX_OPERATOR_SCHEMA(ATen, ONNX_DOMAIN, 1, OpSchema()
     .SetSupportLevel(SupportType::EXPERIMENTAL)
     .AllowUncheckedAttributes()
     .SetDoc(R"DOC(
@@ -260,9 +260,9 @@ and op)DOC")
     .TypeConstraint("T",
         { "tensor(bool)", "tensor(int32)", "tensor(int64)",
         "tensor(float16)", "tensor(float)", "tensor(double)" },
-        "Constrain output types to bool, int32, int64, float16, float, double tensors.");
+        "Constrain output types to bool, int32, int64, float16, float, double tensors."));
 
-ONNX_OPERATOR_SCHEMA(ImageScaler)
+ONNX_OPERATOR_SCHEMA(ImageScaler, ONNX_DOMAIN, 1, OpSchema()
     .SetSupportLevel(SupportType::EXPERIMENTAL)
     .SetDoc(R"DOC(Scale and bias the input image. Bias values are stored in
 the same ordering as the image pixel format.)DOC")
@@ -274,9 +274,9 @@ the same ordering as the image pixel format.)DOC")
         "T",
         {"tensor(float16)", "tensor(float)", "tensor(double)"},
         "Constrain input and output types to float tensors.")
-    .TypeAndShapeInferenceFunction(propagateShapeAndTypeFromFirstInput);
+    .TypeAndShapeInferenceFunction(propagateShapeAndTypeFromFirstInput));
 
-ONNX_OPERATOR_SCHEMA(MeanVarianceNormalization)
+ONNX_OPERATOR_SCHEMA(MeanVarianceNormalization, ONNX_DOMAIN, 1, OpSchema()
     .SetSupportLevel(SupportType::EXPERIMENTAL)
     .SetDoc(R"DOC(Perform mean variance normalization.)DOC")
     .Attr("across_channels", "If 1, mean and variance are computed across channels. Default is 0.", AttributeProto::INT, static_cast<int64_t>(0))
@@ -287,9 +287,9 @@ ONNX_OPERATOR_SCHEMA(MeanVarianceNormalization)
         "T",
         {"tensor(float16)", "tensor(float)", "tensor(double)"},
         "Constrain input and output types to float tensors.")
-    .TypeAndShapeInferenceFunction(propagateShapeAndTypeFromFirstInput);
+    .TypeAndShapeInferenceFunction(propagateShapeAndTypeFromFirstInput));
 
-ONNX_OPERATOR_SCHEMA(Crop)
+ONNX_OPERATOR_SCHEMA(Crop, ONNX_DOMAIN, 1, OpSchema()
     .SetSupportLevel(SupportType::EXPERIMENTAL)
     .SetDoc(R"DOC(Crop and image to the specified spatial dimensions. If scale is given,
 then optionally start the crop offset by the left/top border amounts.
@@ -301,4 +301,5 @@ If scale is not provided, crop the borders as provided.)DOC")
     .TypeConstraint(
         "T",
         {"tensor(float16)", "tensor(float)", "tensor(double)"},
-        "Constrain input and output types to float tensors.");
+        "Constrain input and output types to float tensors."));
+}

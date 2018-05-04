@@ -5,9 +5,10 @@
 
 #include <algorithm>
 
-using namespace ONNX_NAMESPACE;
+namespace ONNX_NAMESPACE
+{
 
-ONNX_OPERATOR_SCHEMA(Cast)
+ONNX_OPERATOR_SCHEMA(Cast, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
 The operator casts the elements of a given input tensor to a data type
 specified by the 'to' argument and returns an output tensor of the same size in
@@ -64,10 +65,9 @@ NOTE: Casting to and from strings is not supported yet.
         return;
       }
       propagateShapeFromInputToOutput(ctx, 0, 0);
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(Reshape)
-    .SinceVersion(6)
+ONNX_OPERATOR_SCHEMA(Reshape, ONNX_DOMAIN, 5, OpSchema()
     .SetDoc(R"DOC(
 Reshape the input tensor similar to numpy.reshape.
 First input is the data tensor, second input is a shape tensor which specifies the output shape. It outputs the reshaped tensor.
@@ -77,7 +77,6 @@ could also be 0, in which case the actual dimension value is unchanged (i.e. tak
 from the input tensor).)DOC")
     .Input(0, "data", "An input tensor.", "T")
     .Input(1, "shape", "Specified shape for output.", "tensor(int64)")
-    .SinceVersion(5)
     .Output(0, "reshaped", "Reshaped data.", "T")
     .TypeConstraint(
         "T",
@@ -85,9 +84,9 @@ from the input tensor).)DOC")
         "Constrain input and output types to float tensors.")
     .TypeAndShapeInferenceFunction([](InferenceContext& ctx) {
       propagateElemTypeFromInputToOutput(ctx, 0, 0);
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(Shape)
+ONNX_OPERATOR_SCHEMA(Shape, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
 Takes a tensor as input and outputs an 1D int64 tensor containing the shape of the input tensor.
 )DOC")
@@ -126,9 +125,9 @@ Takes a tensor as input and outputs an 1D int64 tensor containing the shape of t
             ->set_dim_value(
                 ctx.getInputType(0)->tensor_type().shape().dim_size());
       }
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(Size)
+ONNX_OPERATOR_SCHEMA(Size, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
 Takes a tensor as input and outputs a int64 scalar that equals to the total number of elements of the input tensor.
 )DOC")
@@ -155,10 +154,9 @@ Takes a tensor as input and outputs a int64 scalar that equals to the total numb
       ctx.getOutputType(0)->mutable_tensor_type()->set_elem_type(
           TensorProto::INT64);
       ctx.getOutputType(0)->mutable_tensor_type()->mutable_shape();
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(Concat)
-    .SinceVersion(4)
+ONNX_OPERATOR_SCHEMA(Concat, ONNX_DOMAIN, 4, OpSchema()
     .Attr("axis", "Which axis to concat on", AttributeProto::INT)
     .SetDoc("Concatenate a list of tensors into a single tensor")
     .Input(
@@ -224,10 +222,9 @@ ONNX_OPERATOR_SCHEMA(Concat)
       if (all_lengths_known) {
         output_shape->mutable_dim(axis)->set_dim_value(total_length);
       }
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(Split)
-    .SinceVersion(2)
+ONNX_OPERATOR_SCHEMA(Split, ONNX_DOMAIN, 2, OpSchema()
     .Input(0, "input", "The tensor to split", "T")
     .Output(
         0,
@@ -291,9 +288,9 @@ Otherwise, the tensor is split to equal sized parts.
               ->set_dim_value(split[i]);
         }
       }
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(Slice)
+ONNX_OPERATOR_SCHEMA(Slice, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
 Produces a slice of the input tensor along multiple axes. Similar to numpy:
 https://docs.scipy.org/doc/numpy/reference/arrays.indexing.html
@@ -407,9 +404,9 @@ Example 2:
           *newdim = ctx.getInputType(0)->tensor_type().shape().dim((int)i);
         }
       }
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(Transpose)
+ONNX_OPERATOR_SCHEMA(Transpose, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
 Transpose the input tensor similar to numpy.transpose. For example, when
 perm=(1, 0, 2), given an input tensor of shape (1, 2, 3), the output shape
@@ -447,9 +444,9 @@ will be (2, 1, 3).
         appendSingleDimCopiedFromInputTypeToOutputType(
             ctx, 0, 0, static_cast<size_t>(perm[i]));
       }
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(Gather)
+ONNX_OPERATOR_SCHEMA(Gather, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
 Given `data` tensor of rank r >= 1, and `indices` tensor of rank q, gather
 entries of the axis dimension of `data` (by default outer-most one as axis=0) indexed by `indices`, and concatenates
@@ -530,9 +527,9 @@ Example 2:
       for (int i = 0; i < out_rank; ++i) {
         ctx.getOutputType(0)->mutable_tensor_type()->mutable_shape()->add_dim();
       }
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(Squeeze)
+ONNX_OPERATOR_SCHEMA(Squeeze, ONNX_DOMAIN, 1, OpSchema()
     .Attr(
         "axes",
         "List of positive integers, indicate the dimensions to squeeze.",
@@ -576,9 +573,9 @@ Takes a  parameter `axes` with a list of axes to squeeze.
                ->add_dim() = ctx.getInputType(0)->tensor_type().shape().dim(i);
         }
       }
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(Unsqueeze)
+ONNX_OPERATOR_SCHEMA(Unsqueeze, ONNX_DOMAIN, 1, OpSchema()
     .Attr(
         "axes",
         "List of positive integers, indicate the dimensions to be inserted",
@@ -642,10 +639,9 @@ Dimension indices in `axes` are as seen in the output tensor. For example:
             ->set_dim_value(1);
         ++j;
       }
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(Pad)
-    .SinceVersion(2)
+ONNX_OPERATOR_SCHEMA(Pad, ONNX_DOMAIN, 2, OpSchema()
     .Attr(
         "pads",
         "List of integers indicate the padding element count at the "
@@ -734,9 +730,9 @@ Example:
           *newdim = ctx.getInputType(0)->tensor_type().shape().dim((int)i);
         }
       }
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(SpaceToDepth)
+ONNX_OPERATOR_SCHEMA(SpaceToDepth, ONNX_DOMAIN, 1, OpSchema()
     .Attr(
         "blocksize",
         "Blocks of [blocksize, blocksize] are moved.",
@@ -777,9 +773,9 @@ are moved to the depth dimension.
 				});
 			}
 		}
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(DepthToSpace)
+ONNX_OPERATOR_SCHEMA(DepthToSpace, ONNX_DOMAIN, 1, OpSchema()
     .Attr(
         "blocksize",
         "Blocks of [blocksize, blocksize] are moved.",
@@ -821,9 +817,9 @@ and width dimensions.
 				});
 			}
 		}
-	});
+	}));
 
-ONNX_OPERATOR_SCHEMA(Tile)
+ONNX_OPERATOR_SCHEMA(Tile, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(Constructs a tensor by tiling a given tensor.
 This is the same as function `tile` in Numpy, but no broadcast.
 For example A = [[1, 2], [3, 4]], B = [1, 2], tile(A, B) = [[1, 2, 1, 2], [3, 4, 3, 4]]
@@ -854,10 +850,9 @@ For example A = [[1, 2], [3, 4]], B = [1, 2], tile(A, B) = [[1, 2, 1, 2], [3, 4,
 		// Only rank of output can be inferred. We can do better if second input is
 		// a constant, but this requires extending InferenceContext interface to
 		// get values of constant inputs.
-     });
+     }));
 
-ONNX_OPERATOR_SCHEMA(Upsample)
-	.SinceVersion(7)
+ONNX_OPERATOR_SCHEMA(Upsample, ONNX_DOMAIN, 7, OpSchema()
     .Attr(
         "scales",
         "The scale array along each dimension. It takes value greater than or equal to 1."
@@ -878,9 +873,9 @@ ONNX_OPERATOR_SCHEMA(Upsample)
 Upsample the input tensor.
 Each dimension value of the output tensor is:
   output_dimension = floor(input_dimension * scale).
-)DOC");
+)DOC"));
 
-ONNX_OPERATOR_SCHEMA(Identity)
+ONNX_OPERATOR_SCHEMA(Identity, ONNX_DOMAIN, 1, OpSchema()
 .SetDoc("Identity operator")
 .Input(0, "input", "Input tensor", "T")
 .Output(
@@ -890,4 +885,5 @@ ONNX_OPERATOR_SCHEMA(Identity)
 	"T")
 	.TypeConstraint("T", OpSchema::all_tensor_types(),
 		"Constrain input and output types to all tensor types.")
-	.TypeAndShapeInferenceFunction(propagateShapeAndTypeFromFirstInput);
+	.TypeAndShapeInferenceFunction(propagateShapeAndTypeFromFirstInput));
+}
