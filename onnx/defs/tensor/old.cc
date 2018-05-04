@@ -3,9 +3,10 @@
 
 #include "onnx/defs/schema.h"
 
-using namespace ONNX_NAMESPACE;
+namespace ONNX_NAMESPACE
+{
 
-ONNX_OPERATOR_SCHEMA(Concat)
+ONNX_OPERATOR_SCHEMA(Concat, ONNX_DOMAIN, 1, OpSchema()
     .Attr(
         "axis",
         "Which axis to concat on.  Default value is 1.",
@@ -22,10 +23,9 @@ ONNX_OPERATOR_SCHEMA(Concat)
     .TypeConstraint(
         "T",
         {"tensor(float16)", "tensor(float)", "tensor(double)"},
-        "Constrain output types to float tensors.");
+        "Constrain output types to float tensors."));
 
-ONNX_OPERATOR_SCHEMA(Split)
-    .SinceVersion(1)
+ONNX_OPERATOR_SCHEMA(Split, ONNX_DOMAIN, 1, OpSchema()
     .Input(0, "input", "The tensor to split", "T")
     .Input(
         1,
@@ -49,10 +49,9 @@ ONNX_OPERATOR_SCHEMA(Split)
 'axis'. The lengths of the split can be specified using argument 'axis' or
 optional second input blob to the operator. Otherwise, the tensor is split
 to equal sized parts.
-)DOC");
+)DOC"));
 
-ONNX_OPERATOR_SCHEMA(Pad)
-    .SinceVersion(1)
+ONNX_OPERATOR_SCHEMA(Pad, ONNX_DOMAIN, 1, OpSchema()
     .Attr(
         "paddings",
         "List of integers indicate the padding element count at the "
@@ -98,9 +97,9 @@ Example:
     .TypeConstraint(
         "T",
         {"tensor(float16)", "tensor(float)", "tensor(double)"},
-        "Constrain input and output types to float tensors.");
+        "Constrain input and output types to float tensors."));
 
-ONNX_OPERATOR_SCHEMA(Reshape)
+ONNX_OPERATOR_SCHEMA(Reshape, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
 Reshape the input tensor similar to numpy.reshape.
 It takes a tensor as input and an argument `shape`. It outputs the reshaped tensor.
@@ -117,4 +116,6 @@ from the input tensor).)DOC")
     .TypeConstraint(
         "T",
         {"tensor(float16)", "tensor(float)", "tensor(double)"},
-        "Constrain input and output types to float tensors.");
+        "Constrain input and output types to float tensors."));
+
+}

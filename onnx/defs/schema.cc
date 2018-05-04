@@ -274,6 +274,19 @@ OpSchema& OpSchema::SetDoc(std::string doc) {
   return *this;
 }
 
+// Functions to specify name for the operator schema.
+OpSchema& OpSchema::SetName(std::string name) {
+  name_ = std::move(name);
+  return *this;
+}
+
+// Functions to specify code location for the operator schema.
+OpSchema& OpSchema::SetLocation(std::string file, int line) {
+  file_ = std::move(file);
+  line_ = line;
+  return *this;
+}
+
 OpSchema& OpSchema::SetDomain(std::string domain) {
   domain_ = std::move(domain);
   return *this;

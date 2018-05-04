@@ -2,9 +2,10 @@
 // Licensed under the MIT license.
 
 #include "onnx/defs/schema.h"
-using namespace ONNX_NAMESPACE;
+namespace ONNX_NAMESPACE
+{
 
-ONNX_OPERATOR_SCHEMA(Constant)
+ONNX_OPERATOR_SCHEMA(Constant, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(A constant tensor.)DOC")
     .Attr(
           "value",
@@ -23,9 +24,9 @@ ONNX_OPERATOR_SCHEMA(Constant)
         const TensorProto& tensor_proto = attr_proto->t();
         updateOutputElemType(ctx, 0, tensor_proto.data_type());
         updateOutputShape(ctx, 0, tensor_proto);
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(RandomUniform)
+ONNX_OPERATOR_SCHEMA(RandomUniform, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
 Generate a tensor with random values drawn from a uniform distribution. The shape
 of the tensor is specified by the `shape` argument and the range by `low` and `high`.
@@ -67,9 +68,9 @@ TensorProto message.
     .TypeAndShapeInferenceFunction([](InferenceContext& ctx) {
         propagateElemTypeFromAttributeToOutput(ctx, "dtype", 0);
         propagateShapeFromAttributeToOutput(ctx, "shape", 0);
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(RandomNormal)
+ONNX_OPERATOR_SCHEMA(RandomNormal, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
 Generate a tensor with random values drawn from a normal distribution. The shape
 of the tensor is specified by the `shape` argument and the parameter of the normal distribution
@@ -112,9 +113,9 @@ TensorProto message.
     .TypeAndShapeInferenceFunction([](InferenceContext& ctx) {
         propagateElemTypeFromAttributeToOutput(ctx, "dtype", 0);
         propagateShapeFromAttributeToOutput(ctx, "shape", 0);
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(RandomUniformLike)
+ONNX_OPERATOR_SCHEMA(RandomUniformLike, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
 Generate a tensor with random values drawn from a uniform distribution. 
 The shape of the output tensor is copied from the shape of the input tensor, 
@@ -168,9 +169,9 @@ TensorProto message and be valid as an output type.
           return;
         }
         propagateShapeFromInputToOutput(ctx, 0, 0);
-    });
+    }));
 
-ONNX_OPERATOR_SCHEMA(RandomNormalLike)
+ONNX_OPERATOR_SCHEMA(RandomNormalLike, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
 Generate a tensor with random values drawn from a normal distribution. 
 The shape of the output tensor is copied from the shape of the input tensor, 
@@ -224,4 +225,6 @@ TensorProto message, and be valid as an output type.
           return;
         }
         propagateShapeFromInputToOutput(ctx, 0, 0);
-    });
+    }));
+
+}  // namespace ONNX_NAMESPACE

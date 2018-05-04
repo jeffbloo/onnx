@@ -1,6 +1,5 @@
 #include "onnx/defs/schema.h"
 
-using namespace ONNX_NAMESPACE;
 
 namespace ONNX_NAMESPACE {
 
@@ -88,7 +87,7 @@ std::function<void(OpSchema&)> RNNDocGeneratorOld(const char* /*name*/) {
 }
 
 
-ONNX_OPERATOR_SCHEMA(GRU)
+ONNX_OPERATOR_SCHEMA(GRU, ONNX_DOMAIN, 1, OpSchema()
     .SetDoc(R"DOC(
 Computes an one-layer GRU. This operator is usually supported via some custom
 implementation such as CuDNN.
@@ -201,5 +200,5 @@ Equations (Default: f=Sigmoid, g=Tanh):
         "- assumed to be 0",
         "T",
         OpSchema::Optional)
-    .FillUsing(RNNDocGeneratorOld("GRU"));
+    .FillUsing(RNNDocGeneratorOld("GRU")));
 } // namespace ONNX_NAMESPACE
