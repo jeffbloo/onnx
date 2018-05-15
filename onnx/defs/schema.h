@@ -529,7 +529,7 @@ class OpSchemaRegistry final {
 
   class OpSchemaRegisterOnce final {
    public:
-    OpSchemaRegisterOnce(OpSchema& op_schema) {
+    OpSchemaRegisterOnce(OpSchema&& op_schema) {
       // TODO: when we fix all issues - we can add abort() here
       try {
         op_schema.Finalize();
@@ -662,21 +662,27 @@ class OpSchemaRegistry final {
   }
 };
 
-// ONNX_OPERATOR_SCHEMA is implemented either with static registration or by exposing
-// a factory method.  
-#ifndef ONNX_NON_STATIC_SCHEMA_INITIALIZATION
-#define ONNX_OPERATOR_SCHEMA(name, domain, ver, impl) \
-  static ONNX_NAMESPACE::OpSchemaRegistry::OpSchemaRegisterOnce( \
-      op_schema_register_once_##name##_##domain##_ver##ver) = impl\
-      .SetName(#name).SetDomain(domain##_NAME).SinceVersion(ver).SetLocation(__FILE__, __LINE__)
-#else
+// Registers all schema of a given operator set
+template<class T> 
+void RegisterOpSetSchema(){
+  T::ForEachSchema([](OpSchema&& schema) {OpSchemaRegistry::OpSchemaRegisterOnce(registration) = std::forward<OpSchema&&>(schema); });
+};
+
+// Forward declaration for the non-specialized GetOpSchema method.  This enforces a consistent
+// signature on functions that query individual schema, which are defined as specializations
+// of this function.
 template <typename T> OpSchema GetOpSchema();
+
+// Defines specialization of GetOpSchema for a class whose name is determined based on 
+// a convention using name, domain, and version.
 #define ONNX_OPERATOR_SCHEMA(name, domain, ver, impl) \
-    class name##_##domain##_ver##ver##_OpSchemaId{}; \
-    template<> OpSchema ONNX_NAMESPACE::GetOpSchema< name##_##domain##_ver##ver##_OpSchemaId>(){ \
-      return impl.SetName(#name).SetDomain(domain##_NAME).SinceVersion(ver).SetLocation(__FILE__, __LINE__); \
-    }
-#endif
+class ONNX_OPERATOR_SCHEMA_CLASS_NAME(domain, ver, name);\
+template<> OpSchema ONNX_NAMESPACE::GetOpSchema<ONNX_OPERATOR_SCHEMA_CLASS_NAME(domain, ver, name)>(){ \
+return impl.SetName(#name).SetDomain(domain##_NAME).SinceVersion(ver).SetLocation(__FILE__, __LINE__); \
+}
+
+// Naming convention for operator schema classes
+#define ONNX_OPERATOR_SCHEMA_CLASS_NAME(domain, ver, name) name##_##domain##_ver##ver
 
 // Helper function
 size_t ReplaceAll(std::string& s, const char* from, const char* to);

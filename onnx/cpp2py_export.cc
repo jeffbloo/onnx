@@ -6,6 +6,8 @@
 
 #include "onnx/checker.h"
 #include "onnx/defs/schema.h"
+#include "onnx/defs/operator_sets.h"
+#include "onnx/defs/operator_sets-ml.h"
 #include "onnx/optimizer/optimize.h"
 #include "onnx/py_utils.h"
 #include "onnx/shape_inference/implementation.h"
@@ -16,6 +18,11 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 PYBIND11_MODULE(onnx_cpp2py_export, onnx_cpp2py_export) {
+  RegisterOnnxOperatorSetSchema();
+#ifdef ONNX_ML
+  RegisterOnnxMLOperatorSetSchema();
+#endif
+
   onnx_cpp2py_export.doc() = "Python interface to onnx";
 
   // Submodule `schema`
