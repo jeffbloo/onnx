@@ -1,6 +1,8 @@
 // Copyright (c) Facebook Inc. and Microsoft Corporation.
 // Licensed under the MIT license.
 
+#ifdef ONNX_ML
+
 #include "onnx/defs/schema.h"
 
 namespace ONNX_NAMESPACE {
@@ -54,3 +56,5 @@ void RegisterOnnxMLOperatorSetSchema() {
   RegisterOpSetSchema<OpSet_AI_ONNX_ML_DOMAIN_ver1>();
 }
 } // namespace ONNX_NAMESPACE
+
+#endif 

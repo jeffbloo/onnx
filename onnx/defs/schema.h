@@ -483,10 +483,20 @@ using OpName_Domain_Version_Schema_Map = std::unordered_map<
     std::string,
     std::unordered_map<std::string, std::map<OperatorSetVersion, OpSchema>>>;
 
+class ISchemaRegistry {
+  public:
+    virtual ~ISchemaRegistry() = default;
+
+    virtual const OpSchema* GetSchema(
+      const std::string& key,
+      const int maxInclusiveVersion,
+      const std::string& domain = ONNX_DOMAIN_NAME) const = 0;
+};
+
 /**
  * @brief A registry to hold all the operator schemas.
  */
-class OpSchemaRegistry final {
+class OpSchemaRegistry final : public ISchemaRegistry {
  public:
   // A singleton class to store domain to min/max op_set version map.
   class DomainToVersionRange final {
@@ -621,9 +631,19 @@ class OpSchemaRegistry final {
     }
   }
 
+  static OpSchemaRegistry *Instance();
+  
+  const OpSchema* GetSchema(
+      const std::string& key,
+      const int maxInclusiveVersion,
+      const std::string& domain = ONNX_DOMAIN_NAME) const override {
+    return Schema(key, maxInclusiveVersion, domain);
+  }
+
  private:
-  // OpSchemaRegistry should not need to be instantiated.
-  OpSchemaRegistry() = delete;
+  // OpSchemaRegistry should not need to be instantiated except statically
+  // within this class
+  OpSchemaRegistry() = default;
 
   /**
    * @brief Returns the underlying string to OpSchema map.
