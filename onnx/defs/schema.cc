@@ -55,6 +55,11 @@ OpSchema::FormalParameterOption OpSchema::FormalParameter::GetOption() const {
   return param_option_;
 }
 
+OpSchemaRegistry* OpSchemaRegistry::Instance() {
+  static OpSchemaRegistry instance;
+  return &instance;
+}
+
 void OpSchema::Verify(const NodeProto& node) const {
   // Check the number of inputs.
   if (node.input_size() < min_input_ || node.input_size() > max_input_) {

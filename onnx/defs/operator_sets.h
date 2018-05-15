@@ -30,7 +30,6 @@ class ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 1, Dropout);
 class ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 1, Elu);
 class ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 1, Equal);
 class ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 1, Exp);
-class ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 1, FC);
 class ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 1, Flatten);
 class ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 1, Floor);
 class ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 1, GRU);
@@ -144,7 +143,6 @@ class OpSet_ONNX_DOMAIN_ver1 {
       fn(GetOpSchema<ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 1, Elu)>());
       fn(GetOpSchema<ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 1, Equal)>());
       fn(GetOpSchema<ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 1, Exp)>());
-      fn(GetOpSchema<ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 1, FC)>());
       fn(GetOpSchema<ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 1, Flatten)>());
       fn(GetOpSchema<ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 1, Floor)>());
       fn(GetOpSchema<ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 1, GRU)>());
@@ -349,6 +347,31 @@ class OpSet_ONNX_DOMAIN_ver6 {
     }
 };
 
+// Forward declarations for ai.onnx version 7
+class ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 7, Acos);
+class ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 7, Asin);
+class ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 7, Atan);
+class ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 7, AveragePool);
+class ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 7, Cos);
+class ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 7, Sin);
+class ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 7, Tan);
+class ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 7, Upsample);
+
+// Iterate over schema from ai.onnx version 7
+class OpSet_ONNX_DOMAIN_ver7 {
+  public:
+    static void ForEachSchema(std::function<void(OpSchema &&)> fn){
+      fn(GetOpSchema<ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 7, Acos)>());
+      fn(GetOpSchema<ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 7, Asin)>());
+      fn(GetOpSchema<ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 7, Atan)>());
+      fn(GetOpSchema<ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 7, AveragePool)>());
+      fn(GetOpSchema<ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 7, Cos)>());
+      fn(GetOpSchema<ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 7, Sin)>());
+      fn(GetOpSchema<ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 7, Tan)>());
+      fn(GetOpSchema<ONNX_OPERATOR_SCHEMA_CLASS_NAME(ONNX_DOMAIN, 7, Upsample)>());
+  }
+};
+
 void RegisterOnnxOperatorSetSchema(){
   RegisterOpSetSchema<OpSet_ONNX_DOMAIN_ver1>();
   RegisterOpSetSchema<OpSet_ONNX_DOMAIN_ver2>();
@@ -356,5 +379,7 @@ void RegisterOnnxOperatorSetSchema(){
   RegisterOpSetSchema<OpSet_ONNX_DOMAIN_ver4>();
   RegisterOpSetSchema<OpSet_ONNX_DOMAIN_ver5>();
   RegisterOpSetSchema<OpSet_ONNX_DOMAIN_ver6>();
+  RegisterOpSetSchema<OpSet_ONNX_DOMAIN_ver7>();
   }
+
 } // namespace ONNX_NAMESPACE

@@ -4,8 +4,8 @@
 #include <limits>
 #include <unordered_map>
 
-#include "onnx/checker.h"
 #include "onnx/defs/schema.h"
+#include "onnx/checker.h"
 #include "onnx/defs/operator_sets.h"
 #include "onnx/defs/operator_sets-ml.h"
 #include "onnx/optimizer/optimize.h"
@@ -240,7 +240,7 @@ PYBIND11_MODULE(onnx_cpp2py_export, onnx_cpp2py_export) {
     [](const py::bytes& bytes) {
       ModelProto proto{};
       ParseProtoFromPyBytes(&proto, bytes);
-      shape_inference::InferShapes(proto);
+      shape_inference::InferShapes(proto, OpSchemaRegistry::Instance());
       std::string out;
       proto.SerializeToString(&out);
       return py::bytes(out);
