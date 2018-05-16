@@ -52,7 +52,7 @@ class OpSet_AI_ONNX_ML_DOMAIN_ver1 {
     }
 };
 
-void RegisterOnnxMLOperatorSetSchema() {
+inline void RegisterOnnxMLOperatorSetSchema() {
   RegisterOpSetSchema<OpSet_AI_ONNX_ML_DOMAIN_ver1>();
 }
 } // namespace ONNX_NAMESPACE

@@ -142,7 +142,7 @@ void mergeShapesAndTypes(
   }
 }
 
-void InferShapes(ModelProto& m, const ISchemaRegistry *schema_registry) {
+void InferShapes(ModelProto& m, const ISchemaRegistry *schema_registry = OpSchemaRegistry::Instance()) {
   std::unordered_map<std::string, int> opset_imports;
   for (const auto& opset_import : m.opset_import()) {
     opset_imports[opset_import.domain()] =

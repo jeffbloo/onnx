@@ -550,7 +550,9 @@ class OpSchemaRegistry final : public ISchemaRegistry {
       } catch (const std::exception& e) {
         std::cerr << "Schema error: " << e.what() << std::endl;
       }
-      auto& m = map();
+      
+      auto& m = GetMapWithoutEnsuringRegistration();
+
       auto& op_name = op_schema.Name();
       auto& op_domain = op_schema.domain();
       auto ver = op_schema.SinceVersion();
@@ -659,6 +661,7 @@ class OpSchemaRegistry final : public ISchemaRegistry {
    * We wrap it inside a function to avoid the statia initialization order
    * fiasco.
    */
+  static OpName_Domain_Version_Schema_Map& GetMapWithoutEnsuringRegistration();
   static OpName_Domain_Version_Schema_Map& map();
 
  public:

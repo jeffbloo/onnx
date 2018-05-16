@@ -6,8 +6,6 @@
 
 #include "onnx/defs/schema.h"
 #include "onnx/checker.h"
-#include "onnx/defs/operator_sets.h"
-#include "onnx/defs/operator_sets-ml.h"
 #include "onnx/optimizer/optimize.h"
 #include "onnx/py_utils.h"
 #include "onnx/shape_inference/implementation.h"
@@ -18,11 +16,6 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 PYBIND11_MODULE(onnx_cpp2py_export, onnx_cpp2py_export) {
-  RegisterOnnxOperatorSetSchema();
-#ifdef ONNX_ML
-  RegisterOnnxMLOperatorSetSchema();
-#endif
-
   onnx_cpp2py_export.doc() = "Python interface to onnx";
 
   // Submodule `schema`
@@ -240,7 +233,7 @@ PYBIND11_MODULE(onnx_cpp2py_export, onnx_cpp2py_export) {
     [](const py::bytes& bytes) {
       ModelProto proto{};
       ParseProtoFromPyBytes(&proto, bytes);
-      shape_inference::InferShapes(proto, OpSchemaRegistry::Instance());
+      shape_inference::InferShapes(proto);
       std::string out;
       proto.SerializeToString(&out);
       return py::bytes(out);

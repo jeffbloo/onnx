@@ -372,7 +372,7 @@ class OpSet_ONNX_DOMAIN_ver7 {
   }
 };
 
-void RegisterOnnxOperatorSetSchema(){
+inline void RegisterOnnxOperatorSetSchema(){
   RegisterOpSetSchema<OpSet_ONNX_DOMAIN_ver1>();
   RegisterOpSetSchema<OpSet_ONNX_DOMAIN_ver2>();
   RegisterOpSetSchema<OpSet_ONNX_DOMAIN_ver3>();

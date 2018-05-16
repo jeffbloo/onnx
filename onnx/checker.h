@@ -6,6 +6,7 @@
 #include "onnx/onnx_pb.h"
 #include "onnx/onnx-operators_pb.h"
 #include "onnx/string_utils.h"
+#include "onnx/defs/schema.h"
 
 namespace ONNX_NAMESPACE {
 namespace checker {

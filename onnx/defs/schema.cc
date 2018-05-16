@@ -5,6 +5,8 @@
 #include <stdexcept>
 #include <unordered_set>
 #include "onnx/checker.h"
+#include "onnx/defs/operator_sets.h"
+#include "onnx/defs/operator_sets-ml.h"
 #include "onnx/common/stl_backports.h"
 
 namespace ONNX_NAMESPACE {
@@ -593,8 +595,29 @@ std::ostream& operator<<(std::ostream& out, const OpSchema& schema) {
   return out;
 }
 
-OpName_Domain_Version_Schema_Map& OpSchemaRegistry::map() {
+// Private method used by OpSchemaRegisterOnce and OpSchemaRegistry::map()
+OpName_Domain_Version_Schema_Map& OpSchemaRegistry::GetMapWithoutEnsuringRegistration() {
   static OpName_Domain_Version_Schema_Map map;
+  return map;
+}
+
+OpName_Domain_Version_Schema_Map& OpSchemaRegistry::map() {  
+  auto& map = GetMapWithoutEnsuringRegistration();
+
+  class SchemasRegisterer {
+    public:
+      SchemasRegisterer() {
+        RegisterOnnxOperatorSetSchema();
+#ifdef ONNX_ML
+        RegisterOnnxMLOperatorSetSchema();
+#endif    
+      }
+  };
+
+  #ifndef ONNX_DISABLE_STATIC_REGISTRATION
+    static SchemasRegisterer schemasRegisterer;
+  #endif
+
   return map;
 }
 
