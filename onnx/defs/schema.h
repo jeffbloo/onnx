@@ -701,7 +701,7 @@ template <typename T> OpSchema GetOpSchema();
 // a convention using name, domain, and version.
 #define ONNX_OPERATOR_SCHEMA(name, domain, ver, impl) \
 class ONNX_OPERATOR_SCHEMA_CLASS_NAME(domain, ver, name);\
-template<> OpSchema ONNX_NAMESPACE::GetOpSchema<ONNX_OPERATOR_SCHEMA_CLASS_NAME(domain, ver, name)>(){ \
+template<> OpSchema GetOpSchema<ONNX_OPERATOR_SCHEMA_CLASS_NAME(domain, ver, name)>(){ \
 return impl.SetName(#name).SetDomain(domain##_NAME).SinceVersion(ver).SetLocation(__FILE__, __LINE__); \
 }
 
